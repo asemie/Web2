@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		#top{
+			width: 1600px;
+			height: 20px;
+			background: url('a15.png') no-repeat 132px center;
+			position: relative;
+			overflow: hidden;
+			background-color: #ccc;
+		}
+		#litbox{
+			margin-left: 200px;
+			width: 1300px;
+			overflow: hidden;
+		}
+		#tips{
+			display: inline;
+			margin-left: 1000px;
+			color: red;
+			font-size: 10px;
+		}
+		*{
+			padding: 0;
+			list-style-type: none;
+        	text-decoration: none;
+		}
+		#box{
+			width: 1200px;
+			height: 382px;
+			border: 1px solid red;
+			margin: 100px auto;
+			position: relative;
+			overflow: hidden;
+		}
+		#slider{
+			width: 8400px;
+			height: 397px;
+			position: absolute;
+			left: -1200px;
+		}
+		.slide{
+			width: 1200px;
+			float: left;
+			overflow: hidden;
+		}
+		#left{
+			left: 30px;
+		}
+		#right{
+			right: 30px;
+		}
+		.box>span{
+			display: block;
+			width: 30px;
+			height: 50px;
+			text-align:center;
+			cursor: pointer;
+			color: #ccc;
+			top: 175px;
+			line-height: 50px;
+			background: rgb(255, 0, 0);
+			font-size: 30px;
+			position: absolute;
+			opacity: 0;
+		}
+		.nav{
+			position: absolute;
+			left: 500px;
+			bottom: 20px;
+		}
+		.nav>li{
+			float: left;
+			width: 20px;
+			height: 20px;
+			background: #ccc;
+			cursor: pointer;
+			margin: 0 10px;
+			border-radius: 50%;
+		}
+		.nav .active{
+			background: red;
+		}
+	</style>
+	<script src="js/animate.js"></script>
+</head>
+<body>
+	<div id="top">
+		<div id="litbox">
+		<span id="tips">[温馨提示]最近有不少不法分子在网上骗人，请大家注意!!!</span>
+	</div>
+	</div>
+	<div class="box" id="box">
+		<div class="slider" id="slider">
+			<div class="slide"><img src="b5.png"></div>
+			<div class="slide"><img src="b1.png"></div>
+			<div class="slide"><img src="b2.png"></div>
+			<div class="slide"><img src="b3.png"></div>
+			<div class="slide"><img src="b4.png"></div>
+			<div class="slide"><img src="b5.png"></div>
+			<div class="slide"><img src="b1.png"></div>
+		</div>
+		<span id="left"><</span>
+		<span id="right">></span>
+		<ul class="nav" id="nav">
+			<li class="active"> </li>
+			<li> </li>
+			<li> </li>
+			<li> </li>
+			<li> </li>
+		</ul>
+	</div>
+	
+</body>
+	<script type="text/javascript">
+	var box = document.getElementById('box');
+	var oNavlist = document.getElementById("nav").children;
+	var slider = document.getElementById('slider');
+	var left = document.getElementById('left');
+	var right = document.getElementById('right');
+	var top = document.getElementById('tips');
+	var index = 1;
+	var timer;
+	var isMoving = false;
+	setInterval(function(){
+		var current = parseInt(getStyle(tips,"margin-left"));
+		if(current==-450){
+			tips.style.marginLeft=1000+"px";
+		}
+		else{
+			tips.style.marginLeft=current-1+"px"
+		}
+	},40)
+	function next(){
+		if(isMoving){
+			return;
+		}
+		isMoving=true;
+		index++;
+		navChange();
+		animate(slider,{left:-1200*index},function(){
+			if(index === 6){
+				slider.style.left = "-1200px";
+				index=1;
+			}
+			isMoving = false;
+		});
+	}
+	var timer = setInterval(next(),3000);
+	box.onmouseover = function(){
+		animate(left,{opacity:50});
+		animate(right,{opacity:50});
+		clearInterval(timer);
+	}
+
+	box.onmouseout = function(){
+		animate(left,{opacity:0});
+		animate(right,{opacity:0});
+		timer = setInterval(next,3000);
+	}
+
+	right.onclick = next;
+	left.onclick = prev;
+	
+
+	function prev(){
+		if(isMoving){
+			return;
+		}
+		isMoving=true;
+		index--;
+		navChange();
+		animate(slider,{left:-1200*index},function(){
+			if(index === 0){
+				slider.style.left = -1200*5+"px";
+				index = 5;
+			}
+		isMoving = false;
+		});
+	}
+
+	for(var i=0;i<oNavlist.length;i++){
+		oNavlist[i].idx = i;
+		oNavlist[i].onclick = function(){
+			index = this.idx+1;
+			navChange();
+			animate(slider,{left:-1200*index});
+		}
+	}
+
+	function navChange(){
+		for(var i=0;i<oNavlist.length;i++){
+			oNavlist[i].className = '';
+		}
+		if(index>5){
+			oNavlist[0].className = 'active';
+		}
+		else if(index<1){
+			oNavlist[4].className = 'active';
+		}
+		else{
+		oNavlist[index-1].className='active';
+	}
+	}
+</script>
+</html>
